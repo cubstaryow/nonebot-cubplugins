@@ -1,25 +1,21 @@
 import asyncio
 from nonebot_plugin_htmlrender import template_to_pic
 from pathlib import Path
-from loguru import logger
-
-'''
-from util.logger import cublog as logger
-'''
 import traceback
 import sys
-from nonebot.message import event_postprocessor,run_postprocessor, run_preprocessor
+from nonebot.message import run_postprocessor
 from nonebot import get_bot
 from nonebot.adapters.onebot.v11 import (
    Bot,  MessageEvent ,MessageSegment,
-   GroupMessageEvent , unescape
+   GroupMessageEvent
 )
 from nonebot.matcher import Matcher
 from nonebot.exception import FinishedException,RejectedException
-from .config import config
-'''
-from pydantic import BaseModel
+from loguru import logger
 
+from nonebot import get_driver
+from pydantic import BaseModel
+from typing import List, Literal, Optional, Set, Tuple
 class config_util(BaseModel):
     superusers: Set[str] = set()
     console: Optional[int|str] = None
@@ -27,26 +23,27 @@ class config_util(BaseModel):
 config: config_util = config_util.parse_obj(get_driver().config.dict())
 
 
-'''
 
 
 class CubbotError(Exception):
     """Cubdragon runtime error"""
-
-def oops_listen(func):   #芝士装饰器
-    async def wrap(*args, **kwargs):
-        try:
-            result = await func(*args, **kwargs)
-            return result
-        except:
-            matcher = kwargs.get('matcher',Matcher)
-            exc_type, _, _ = sys.exc_info()
-            if exc_type not in [FinishedException,RejectedException]:
-                img = await crash_oops()
-                await matcher.send(MessageSegment.image(img))
-            else:
-                raise exc_type
-    return wrap
+    
+def oops_listen(  ):
+    def decorator(oopslisten_func):
+        async def wrapper(*args, **kwargs):
+            try:
+                run_result = await oopslisten_func(*args, **kwargs)
+                return run_result
+            except:
+                matcher = kwargs.get('matcher',Matcher)
+                exc_type, _, _ = sys.exc_info()
+                if exc_type not in [FinishedException,RejectedException]:
+                    img = await crash_oops()
+                    await matcher.send(MessageSegment.image(img))
+                else:
+                    raise exc_type
+        return wrapper
+    return decorator
 
 
 async def crash_oops(err_values:Exception = None):
@@ -59,7 +56,10 @@ async def crash_oops(err_values:Exception = None):
     else:
         error_values=err_values
         newline_char = '<br>'
-        data = f'{newline_char.join(err_values.args)}'
+        try:
+            data = f'{newline_char.join(err_values.args)}'
+        except:
+            data = str(err_values.args)
     template_path = str(Path(__file__).parent / "_HTML_template")
     htmlimage = await template_to_pic(
                 template_path=template_path,
