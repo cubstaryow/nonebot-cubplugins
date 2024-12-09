@@ -18,8 +18,11 @@
 
 # nonebot-plugin-Oops
 nonebot插件运行过程中错误捕获
+
 自动捕获:捕获来自nonebot事件进程的exception属性(只有错误描述)
+
 修改代码:通过try except获取完整的exception属性来进行渲染错误日志
+
 修改代码2:提供了一个装饰器来捕获,不过不能和 @xxx.headle共存,否则nonebot会因获取不到函数参数表而报错
 
 依靠aiohttp
