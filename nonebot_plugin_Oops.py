@@ -1,7 +1,11 @@
 import asyncio
 from nonebot_plugin_htmlrender import template_to_pic
 from pathlib import Path
+from loguru import logger
+
+'''
 from util.logger import cublog as logger
+'''
 import traceback
 import sys
 from nonebot.message import event_postprocessor,run_postprocessor, run_preprocessor
@@ -29,7 +33,7 @@ config: config_util = config_util.parse_obj(get_driver().config.dict())
 class CubbotError(Exception):
     """Cubdragon runtime error"""
 
-def oops_listen(func):
+def oops_listen(func):   #芝士装饰器
     async def wrap(*args, **kwargs):
         try:
             result = await func(*args, **kwargs)
