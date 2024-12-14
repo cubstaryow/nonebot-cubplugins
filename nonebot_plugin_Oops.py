@@ -18,10 +18,9 @@ from pydantic import BaseModel
 from typing import List, Literal, Optional, Set, Tuple
 class config_util(BaseModel):
     superusers: Set[str] = set()
-    console: Optional[int|str] = None
+    console: Optional[int|str] = None   #控制台群聊
     cubplugin_datadir : str=""
 config: config_util = config_util.parse_obj(get_driver().config.dict())
-
 
 
 
