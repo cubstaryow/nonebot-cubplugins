@@ -16,6 +16,8 @@ from loguru import logger
 from nonebot import get_driver
 from pydantic import BaseModel
 from typing import List, Literal, Optional, Set, Tuple
+
+
 class config_util(BaseModel):
     superusers: Set[str] = set()
     console: Optional[int|str] = None   #控制台群聊
@@ -70,6 +72,7 @@ async def crash_oops(err_values:Exception = None):
                 type="jpeg")
     return htmlimage
 
+#自动捕获抛出错误，运行于nonebot事件处理流程，但是获取不到详细信息
 @run_postprocessor
 async def post_run(event: MessageEvent, matcher,e: Exception) -> None:
     bot:Bot = get_bot()
