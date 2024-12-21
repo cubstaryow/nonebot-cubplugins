@@ -2,7 +2,6 @@ from nonebot import on_command
 from nonebot.params import CommandArg , Matcher
 from nonebot_plugin_Oops import CubbotError  , oops_listen
 
-
 oops_text = on_command(
     "cubcrash"
 )
