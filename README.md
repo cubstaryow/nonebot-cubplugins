@@ -9,6 +9,8 @@
 # nonebot-plugin-立创商城搜索解析器
 顾名思义,解析立创商城的搜索结果
 
+由于立创商城页面更新及需要登录此代码已过时
+
 依赖前置: lxml
 
 # nonebot-plugin-APIManager
